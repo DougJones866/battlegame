@@ -1,8 +1,8 @@
 <template>
   <header>
-    <h1>Monster Slayer</h1>
+    <h1>Battle!</h1>
   </header>
-  <div id="game">
+  <div class="game">
     <section id="monster" class="container">
       <h2>Monster Health</h2>
       <div class="healthbar">
@@ -62,7 +62,7 @@ export default {
   data() {
     return {
       playerHealth: 100,
-      monsterHealth: 100,
+      computerHealth: 100,
       currentRound: 0,
       winner: null,
       logMessages: [],
@@ -70,13 +70,13 @@ export default {
   },
   watch: {
     playerHealth(value) {
-      if (value <= 0 && this.monsterHealth <= 0) {
+      if (value <= 0 && this.computerHealth <= 0) {
         this.winner = "draw";
       } else if (value <= 0) {
         this.winner = "monster";
       }
     },
-    monsterHealth(value) {
+    computerHealth(value) {
       if (value <= 0 && this.playerHealth <= 0) {
         this.winner = "draw";
       } else if (value <= 0) {
@@ -87,7 +87,7 @@ export default {
   methods: {
     startGame() {
       this.playerHealth = 100;
-      this.monsterHealth = 100;
+      this.computerHealth = 100;
       this.winner = null;
       this.currentRound = 0;
       this.logMessages = [];
@@ -95,7 +95,7 @@ export default {
     attackMonster() {
       this.currentRound++;
       const attackValue = this.getRandomValue(5, 12);
-      this.monsterHealth -= attackValue;
+      this.computerHealth -= attackValue;
       this.addLogMessage("player", "attack", attackValue);
       this.attackPlayer();
     },
@@ -110,7 +110,7 @@ export default {
     specialAttackMonster() {
       this.currentRound++;
       const attackValue = this.getRandomValue(10, 25);
-      this.monsterHealth -= attackValue;
+      this.computerHealth -= attackValue;
       this.addLogMessage("player", "attack", attackValue);
 
       this.attackPlayer();
@@ -140,10 +140,10 @@ export default {
   },
   computed: {
     monsterBarStyles() {
-      if (this.monsterHealth < 0) {
+      if (this.computerHealth < 0) {
         return { width: "0%" };
       }
-      return { width: this.monsterHealth + "%" };
+      return { width: this.computerHealth + "%" };
     },
     playerBarStyles() {
       if (this.playerHealth < 0) {
@@ -175,6 +175,12 @@ section {
   margin: auto;
 }
 
+.container {
+  background-color:white;
+}
+
+
+
 .healthbar {
   width: 100%;
   height: 40px;
@@ -187,6 +193,7 @@ section {
   background-color: #00a876;
   width: 100%;
   height: 100%;
+  transition: 0.5s;
 }
 
 .container {
@@ -200,6 +207,14 @@ section {
 #monster h2,
 #player h2 {
   margin: 0.25rem;
+}
+
+#player {
+  float:left
+}
+
+#monster {
+  float:right;
 }
 
 #controls {
@@ -250,10 +265,12 @@ button:disabled {
 
 #log li {
   margin: 0.5rem 0;
+  
 }
 
 .log--player {
   color: #7700ff;
+
 }
 
 .log--monster {
